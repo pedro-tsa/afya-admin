@@ -23,6 +23,49 @@
             </MudPaper>
         </MudItem>
     }
+    
+        <MudItem xs="12" md="8">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h6">Receita x Meta</MudText>
+            <MudChart ChartType="ChartType.Line" ChartSeries="receitaMeta" XAxisLabels="meses" Width="100%" Height="300px" />
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h6">Distribuição de Clientes</MudText>
+            <MudChart ChartType="ChartType.Donut" InputData="clientes" InputLabels="tiposClientes" Width="220px" Height="220px" />
+        </MudPaper>
+    </MudItem>
+
+        <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h6" Class="mb-4">Performance dos Projetos</MudText>
+            @foreach (var projeto in performance)
+            {
+                <div class="d-flex justify-space-between">
+                    <MudText Typo="Typo.body2">@projeto.Nome</MudText>
+                    <MudText Typo="Typo.body2">@projeto.Progresso%</MudText>
+                </div>
+                <MudProgressLinear Value="@projeto.Progresso" Color="@projeto.Cor" Rounded="true" Class="mb-4" />
+            }
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h6">Atividades Recentes</MudText>
+            <MudList T="string" Dense="true">
+                @foreach (var atividade in atividades)
+                {
+                    <MudListItem T="string" Icon="@atividade.Icone">
+                        <MudText Typo="Typo.body2">@atividade.Texto</MudText>
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@atividade.Quando</MudText>
+                    </MudListItem>
+                }
+            </MudList>
+        </MudPaper>
+    </MudItem>
 </MudGrid>
 
 @code {
@@ -39,4 +82,34 @@
     string[] semLabels = { "", "", "", "", "", "" };
 
     ChartOptions opcoesMiniGrafico = new() { ShowLegend = false, XAxisLines = false, YAxisLines = false };
+
+        string[] meses = { "Jan", "Fev", "Mar", "Abr", "Mai", "Jun" };
+
+    List<ChartSeries> receitaMeta = new()
+    {
+        new ChartSeries { Name = "Receita", Data = new double[] { 900, 950, 1000, 1080, 1150, 1200 } },
+        new ChartSeries { Name = "Meta", Data = new double[] { 1000, 1000, 1050, 1050, 1100, 1100 } },
+    };
+
+    double[] clientes = { 45, 25, 20, 10 };
+    string[] tiposClientes = { "Universidades", "Faculdades", "Escolas técnicas", "Outros" };
+
+        record ProjetoPerformance(string Nome, int Progresso, Color Cor);
+    record Atividade(string Texto, string Quando, string Icone);
+
+    List<ProjetoPerformance> performance = new()
+    {
+        new ProjetoPerformance("Plataforma EAD", 80, Color.Primary),
+        new ProjetoPerformance("Banco de Questões", 95, Color.Success),
+        new ProjetoPerformance("App do Aluno", 50, Color.Info),
+        new ProjetoPerformance("Portal do Professor", 30, Color.Warning),
+    };
+
+    List<Atividade> atividades = new()
+    {
+        new Atividade("Ana publicou um novo módulo", "há 5 min", Icons.Material.Filled.Publish),
+        new Atividade("Bruno concluiu o Banco de Questões", "há 1 h", Icons.Material.Filled.CheckCircle),
+        new Atividade("Carla adicionou um novo cliente", "há 3 h", Icons.Material.Filled.PersonAdd),
+        new Atividade("Diego gerou o relatório mensal", "ontem", Icons.Material.Filled.Description),
+    };
 }
